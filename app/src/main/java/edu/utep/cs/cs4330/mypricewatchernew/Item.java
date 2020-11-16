@@ -131,7 +131,7 @@ public class Item {
     }
 
     public void refresh() {
-        currentPrice = priceFinder.findPrice(url);
+        new PriceFinderAsync().execute();
         change = calculateChange();
     }
 
@@ -149,15 +149,15 @@ public class Item {
         public void findPrice() {
             try {
                 if (url.substring(12, 21).equals("homedepot")) {
-                    pattern = Pattern.compile("content=\"\\d+[\\.]\\d+\\d");
+                    pattern = Pattern.compile("content=\"\\d+[.]\\d+\\d");
                     price = readSite();
                     currentPrice = price;
                 } else if (url.substring(12, 16).equals("ebay")) {
-                    pattern = Pattern.compile("content=\"\\d+[\\.]\\d+\\d");
+                    pattern = Pattern.compile("content=\"\\d+[.]\\d+\\d");
                     price = readSite();
                     currentPrice = price;
                 } else if (url.substring(12, 19).equals("walmart")) {
-                    pattern = Pattern.compile("content=\"\\d+[\\.]\\d+\\d");
+                    pattern = Pattern.compile("content=\"\\d+[.]\\d+\\d");
                     price = readSite();
                     currentPrice = price;
                 }
@@ -169,7 +169,7 @@ public class Item {
         }
 
         public double readSite() throws Exception {
-            URL url = new URL(store);
+            URL url = new URL(getUrl());
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String line;
             while ((line = in.readLine()) != null) {
