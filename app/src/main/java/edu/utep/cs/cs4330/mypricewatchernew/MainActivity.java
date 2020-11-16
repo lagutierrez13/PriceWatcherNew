@@ -115,18 +115,18 @@ public class MainActivity extends AppCompatActivity {
                 System.exit(0);
                 return true;
             case R.id.action_refresh:
-<<<<<<< HEAD
+
                 itemAdapter.notifyDataSetChanged();
                 //update list view with the updated items
 
-=======
+
                 for(int i = 0; i < itemListView.getCount(); i++){
                     Item t = (Item) itemListView.getItemAtPosition(i);
                     t.refresh();
                     itemAdapter.getItem(i);
                     itemAdapter.notifyDataSetChanged();
                 }
->>>>>>> dc5cb35ba1b03a85a2c8150e7f93dc4bbb868872
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
