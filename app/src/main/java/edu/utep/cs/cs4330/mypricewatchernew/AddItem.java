@@ -30,7 +30,7 @@ public class AddItem extends DialogFragment {
         // Required empty public constructor
     }
 
-    public void setUrlEditText(String url){
+    public void setUrlEditText(String url) {
         this.urlEditText.setText(url);
     }
 
@@ -75,16 +75,20 @@ public class AddItem extends DialogFragment {
         cancelButton = (Button) view.findViewById(R.id.cancelButton);
 
         // Check if bundle has passed arguments
+        nameEditText.setText(getArguments().getString("name"));
         urlEditText.setText(getArguments().getString("url"));
+        sourceEditText.setText(getArguments().getString("source_name"));
 
-//        if(savedInstanceState != null){
-//            urlEditText.setText(savedInstanceState.getString("url"));
-//        }
+        if (getArguments().getString("name") != null) {
+            saveButton.setOnClickListener(v -> {
+                editItem((getArguments().getInt("id")), getArguments().getString("name"), getArguments().getDouble("init_price"), getArguments().getDouble("curr_price"), getArguments().getString("url"), getArguments().getString("source_name"), getArguments().getString("date_added"));
+            });
+        } else {
+            saveButton.setOnClickListener(v -> {
+                addItem(nameEditText.getText().toString(), urlEditText.getText().toString(), sourceEditText.getText().toString());
+            });
+        }
 
-        // Set button on click listeners
-        saveButton.setOnClickListener(v -> {
-            addItem(nameEditText.getText().toString(), urlEditText.getText().toString(), sourceEditText.getText().toString());
-        });
         cancelButton.setOnClickListener(v -> {
             dismiss();
         });
@@ -109,8 +113,18 @@ public class AddItem extends DialogFragment {
             ((MainActivity) getActivity()).getItemAdapter().notifyDataSetChanged();
             Toast.makeText(getActivity(), "Added item: " + item.getName(), Toast.LENGTH_SHORT).show();
             dismiss();
-        }else{
+        } else {
             Toast.makeText(getActivity(), "Fill out all required fields to add item", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void editItem(int id, String name, double init, double curr, String url, String source, String added) {
+        if (!name.isEmpty() && !url.isEmpty() && !source.isEmpty()) {
+            Item item = new Item(id, name, init, curr, url, source, added);
+            ((MainActivity) getActivity()).getDbHelper().update(id, item);
+            ((MainActivity) getActivity()).getItemAdapter().notifyDataSetChanged();
+            Toast.makeText(getActivity(), "Edited item: " + item.getName(), Toast.LENGTH_SHORT).show();
+            dismiss();
         }
     }
 }
