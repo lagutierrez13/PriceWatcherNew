@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">My Price Watcher New Luis/Tony</string>
+    <string name="my_price_watcher">My List</string>
+    <string name="filter_items">filter items</string>
+    <string name="sort_items">sort items</string>
+    <string name="add_item">Add item</string>
+    <string name="name">Name:</string>
+    <string name="price">Price:</string>
+    <string name="change">Change:</string>
+    <string name="added">Added:</string>
+    <string name="launch_url">Launch url</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="item_name">Item Name</string>
+    <string name="url">URL:</string>
+    <string name="source_name">Source Name:</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="item_url">Item URL</string>
+    <string name="delete">DELETE</string>
+    <string name="edit">EDIT</string>
+    <string name="quit">Quit</string>
+    <string name="refresh">Refresh</string>
+</resources>
