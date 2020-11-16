@@ -15,6 +15,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 /*
     Authors: Luis Gutierrez Antonio Zavala
     Class: CS4330
@@ -28,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton filterListButton;
     private ImageButton addItemButton;
     private static final int EDIT = 0, DELETE = 1;
+    int longClickedItemIndex;
+    int clicked = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +62,13 @@ public class MainActivity extends AppCompatActivity {
             AddItem addItemDialogFragment = AddItem.newInstance(url);
             addItemDialogFragment.show(fm, "fragment_add_name");
         }
+        itemListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                longClickedItemIndex = position;
+                return false;
+            }
+        });
     }
 
     //region Context Menu
@@ -62,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         getMenuInflater().inflate(R.menu.menu_item_list, menu);
+        menu.setHeaderTitle("Save Options");
+        menu.add(Menu.NONE, EDIT, menu.NONE, "Edit Save");
+        menu.add(Menu.NONE, DELETE, menu.NONE, "Delete Save");
     }
 
     @Override
@@ -73,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case DELETE:
                 dbHelper.delete(item.getItemId());
-                itemAdapter.getItem(info.position);
+                itemAdapter.getItem(longClickedItemIndex);
                 itemAdapter.notifyDataSetChanged();
                 break;
         }
@@ -98,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 System.exit(0);
                 return true;
             case R.id.action_refresh:
+                itemAdapter.notifyDataSetChanged();
                 //update list view with the updated items
 
                 return true;
@@ -128,8 +146,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sortListClick(View view) {
+        clicked++;
+        List<Item> list = dbHelper.allItems();
+        Collections.sort(list, new Comparator<Item>(){
+            @Override
+            public int compare(Item item, Item t1) {
+                // ## Ascending order
+                if (clicked == 1) {
+                    Toast.makeText(MainActivity.this, "Sorted A - Z", Toast.LENGTH_LONG).show();
+                    return item.getName().compareToIgnoreCase(t1.getName());
+
+                }
+                if (clicked == 2) {
+                    Toast.makeText(MainActivity.this, "Sorted Z - A", Toast.LENGTH_LONG).show();
+                    return t1.getName().compareToIgnoreCase(item.getName());
+                }
+                if (clicked == 3) {
+                    Toast.makeText(MainActivity.this, "Sorted $ - $$$", Toast.LENGTH_LONG).show();
+                    return Double.compare(item.getCurrentPrice(), t1.getCurrentPrice());
+                }
+                if (clicked == 4) {
+                    clicked = 0;
+                    Toast.makeText(MainActivity.this, "Sorted $$$ - $", Toast.LENGTH_LONG).show();
+                    return Double.compare(t1.getCurrentPrice(), item.getCurrentPrice());
+                }
+                
+                return 0;
+            }
+        });
+        ItemAdapter adapter = new ItemAdapter(this, R.layout.item, list);
+        itemListView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     public void filterListClick(View view) {
+        List<Item> filterList = dbHelper.allItems();
+// initialize the adapter with courseList instead of courses
+        ItemAdapter adapter = new ItemAdapter(this, R.layout.item, filterList);
+
+// this code inside the Button's onClick
+        for (Item i : dbHelper.allItems()) {
+            if (Double.parseDouble(i.getChange()) > 0) {
+                adapter.add(i);
+            }
+        }
+        itemListView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        Toast.makeText(MainActivity.this, "Filter to Only Items with Price Change", Toast.LENGTH_LONG).show();
     }
 }
