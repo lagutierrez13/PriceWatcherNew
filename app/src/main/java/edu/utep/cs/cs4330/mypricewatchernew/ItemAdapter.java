@@ -65,10 +65,13 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
         editButton.setOnClickListener(v -> {
             ((MainActivity) getContext()).showEditItemDialog(item);
+            ((MainActivity) getContext()).getItemAdapter().getItem(position);
+            ((MainActivity) getContext()).getItemAdapter().notifyDataSetChanged();
         });
 
         deleteButton.setOnClickListener(v -> {
             ((MainActivity) getContext()).getDbHelper().delete(item.getId());
+
             ((MainActivity) getContext()).getItemAdapter().getItem(position);
             ((MainActivity) getContext()).getItemAdapter().notifyDataSetChanged();
         });

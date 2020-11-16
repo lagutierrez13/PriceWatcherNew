@@ -115,7 +115,7 @@ public class ItemDatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_URL, item.getUrl());
         values.put(KEY_DATE_ADDED, item.getDateAdded());
         values.put(KEY_SOURCE_NAME, item.getSourceName());
-        db.update(ITEM_TABLE, values, KEY_ID + " = " + id, new String[]{String.valueOf(item.getId())});
+        db.update(ITEM_TABLE, values, KEY_ID + " = " + id, null);
         db.close();
     }
 
