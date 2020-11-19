@@ -64,11 +64,13 @@
 
     <ImageButton
         android:id="@+id/add_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="51dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:layout_marginEnd="32dp"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/aqua"
         android:contentDescription="@string/add_item"
         android:onClick="showAddItemDialog"
         app:layout_constraintBottom_toBottomOf="parent"
